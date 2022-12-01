@@ -6,7 +6,9 @@ using Microsoft.Extensions.Hosting;
 using ShopApp.Business.Abstract;
 using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
+using ShopApp.DataAccess.Concrete.EfCore;
 using ShopApp.DataAccess.Concrete.Memory;
+using ShopApp.WebUI.Middlewares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace ShopApp.WebUI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IProductDal, MemoryProductDal>();
+            services.AddScoped<IProductDal, EfCoreProductDal>();
             services.AddScoped<IProductService, ProductManager>();
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
@@ -31,7 +33,10 @@ namespace ShopApp.WebUI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                SeedDatabase.Seed();
             }
+            app.UseStaticFiles();
+            app.CustomStaticFiles();
             app.UseMvcWithDefaultRoute();
           
         }
