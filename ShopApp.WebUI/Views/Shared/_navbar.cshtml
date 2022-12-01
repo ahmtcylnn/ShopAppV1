@@ -1,20 +1,21 @@
-﻿<nav class="navbar navbar-expand-lg navbar-light bg-light">
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-light mb-5" >
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">ShopApp</a>
+    <a class="navbar-brand" asp-controller="Home" asp-action="Index">ShopApp</a>
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
-                <a class="nav-link" href="#">AnaSayfa <span class="sr-only">(current)</span></a>
+                <a class="nav-link" asp-controller="Home" asp-action="Index" >AnaSayfa <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Products</a>
+                <a class="nav-link" asp-controller="Shop" asp-action="List">Products</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Cart</a>
             </li>
+            
             <li class="nav-item">
                 <a class="nav-link" href="#">Orders</a>
             </li>
