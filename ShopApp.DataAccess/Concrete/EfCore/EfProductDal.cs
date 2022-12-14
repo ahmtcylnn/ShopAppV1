@@ -9,9 +9,21 @@ using System.Threading.Tasks;
 
 namespace ShopApp.DataAccess.Concrete.EfCore
 {
-    public class EfCoreProductDal : EfCoreGenericRepository<Product, ShopContext>, IProductDal
+    public class EfProductDal : EfCoreGenericRepository<Product, ShopContext>, IProductDal
     {
-        
+        public int GetCountByCategory(string category)
+        {
+            using (var context = new ShopContext())
+            {
+                var products = context.Products.AsQueryable();
+
+                if (!string.IsNullOrEmpty(category))
+                {
+                    products = products.Include(i => i.ProductCategories).ThenInclude(i => i.Category).Where(i => i.ProductCategories.Any(a => a.Category.CategoryName.ToLower() == category.ToLower()));
+                }
+                return products.Count();
+            }
+        }
 
         public Product GetProductDetails(int id)
         {

@@ -39,6 +39,14 @@ namespace ShopApp.WebUI.Controllers
 
             return View(new ProductListModel()
             {
+                PageInfo=new PageInfo()
+                {
+                    TotalItems=_productService.GetCountByCategory(category),
+                    CurrentPage=page,
+                    ItemsPerPage=pageSize,
+                    CurrentCategory=category
+                },
+
                 Products = _productService.GetProductsByCategory(category,page, pageSize)
 
             });
