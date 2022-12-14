@@ -1,4 +1,5 @@
-﻿using ShopApp.DataAccess.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopApp.DataAccess.Abstract;
 using ShopApp.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,32 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreProductDal : EfCoreGenericRepository<Product, ShopContext>, IProductDal
     {
-        public IEnumerable<Product> GetPopularProducts()
+        
+
+        public Product GetProductDetails(int id)
         {
-            throw new NotImplementedException();
+            using (var context= new ShopContext())
+            {
+                return context.Products
+                              .Where(i=>i.ProductId==id).
+                              Include(i=>i.ProductCategories)
+                              .ThenInclude(i=>i.Category)
+                              .FirstOrDefault();
+            }
+        }
+
+        public List<Product> GetProductsByCategory(string category, int page,int pageSize)
+        {
+            using (var context = new ShopContext())
+            {
+                var products = context.Products.AsQueryable();
+
+                if (!string.IsNullOrEmpty(category))
+                {
+                    products = products.Include(i => i.ProductCategories).ThenInclude(i => i.Category).Where(i => i.ProductCategories.Any(a => a.Category.CategoryName.ToLower() == category.ToLower()));
+                }
+                return products.Skip((page-1)*pageSize).Take(pageSize).ToList();
+            }
         }
     }
 }

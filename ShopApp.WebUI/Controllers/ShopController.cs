@@ -2,6 +2,7 @@
 using ShopApp.Business.Abstract;
 using ShopApp.Entities;
 using ShopApp.WebUI.Models;
+using System.Linq;
 
 namespace ShopApp.WebUI.Controllers
 {
@@ -14,24 +15,31 @@ namespace ShopApp.WebUI.Controllers
             _productService = productService;
 
         }
-        public IActionResult Details(int id)
+        public IActionResult Details(int ? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            Product product=_productService.GetById((int)id);
+            Product product=_productService.GetProductDetails((int)id);
             if (product == null)
             {
                 return NotFound();
             }
-            return View(product);
+            return View(new ProductDetailsModel()
+            {
+                Product = product,
+                Categories = product.ProductCategories.Select(i => i.Category).ToList()
+
+            }); ;
         }
-        public IActionResult List()
+        public IActionResult List(string category,int page=1)
         {
+            const int pageSize = 3;
+
             return View(new ProductListModel()
             {
-                Products = _productService.GetAll(),
+                Products = _productService.GetProductsByCategory(category,page, pageSize)
 
             });
         }
