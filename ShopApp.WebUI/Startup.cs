@@ -42,6 +42,16 @@ namespace ShopApp.WebUI
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "adminProducts",
+                    template: "admin/products",
+                    defaults: new { controller = "Admin", action = "Index" }
+                    );
+                routes.MapRoute(
+                    name: "adminProducts2",
+                    template: "admin/products/{id?}",
+                    defaults: new { controller = "Admin", action = "Edit" }
+                    );
+                routes.MapRoute(
                     name: "products",
                     template: "products/{category?}",
                     defaults:new {controller="Shop",action="List"}
