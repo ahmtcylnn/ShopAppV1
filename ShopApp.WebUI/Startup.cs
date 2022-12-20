@@ -44,7 +44,7 @@ namespace ShopApp.WebUI
                 routes.MapRoute(
                     name: "adminProducts",
                     template: "admin/products",
-                    defaults: new { controller = "Admin", action = "ProductLis" }
+                    defaults: new { controller = "Admin", action = "ProductList" }
                     );
                 routes.MapRoute(
                     name: "adminProducts2",

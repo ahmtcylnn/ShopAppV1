@@ -10,7 +10,7 @@ namespace ShopApp.WebUI.Controllers
     {
         private IProductService _productService;
         private ICategoryService _categoryService;
-        public AdminController(IProductService productService,ICategoryService categoryService)
+        public AdminController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -20,15 +20,15 @@ namespace ShopApp.WebUI.Controllers
             return View(new ProductListModel()
             {
                 Products = _productService.GetAll()
-            }
-
-                );
+            });
         }
+
         [HttpGet]
         public IActionResult CreateProduct()
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult CreateProduct(ProductModel model)
         {
@@ -37,11 +37,14 @@ namespace ShopApp.WebUI.Controllers
                 Name = model.Name,
                 Price = model.Price,
                 Description = model.Description,
-                ImageUrl = model.ImageUrl,
+                ImageUrl = model.ImageUrl
             };
+
             _productService.Create(entity);
+
             return RedirectToAction("ProductList");
         }
+
         public IActionResult EditProduct(int? id)
         {
             if (id == null)
@@ -49,10 +52,12 @@ namespace ShopApp.WebUI.Controllers
                 return NotFound();
             }
             var entity = _productService.GetByIdWithCategories((int)id);
+
             if (entity == null)
             {
                 return NotFound();
             }
+
             var model = new ProductModel()
             {
                 ProductId = entity.ProductId,
@@ -60,16 +65,18 @@ namespace ShopApp.WebUI.Controllers
                 Price = entity.Price,
                 Description = entity.Description,
                 ImageUrl = entity.ImageUrl,
-                SelectedCategories=entity.ProductCategories.Select(i=>i.Category).ToList(),
-
+                SelectedCategories = entity.ProductCategories.Select(i => i.Category).ToList()
             };
-            ViewBag.Categories=_categoryService.GetAll();
+
+            ViewBag.Categories = _categoryService.GetAll();
+
             return View(model);
         }
         [HttpPost]
         public IActionResult EditProduct(ProductModel model)
         {
-            var entity = _productService.GetByIdWithCategories((model.ProductId));
+            var entity = _productService.GetById(model.ProductId);
+
             if (entity == null)
             {
                 return NotFound();
@@ -79,9 +86,8 @@ namespace ShopApp.WebUI.Controllers
             entity.Description = model.Description;
             entity.ImageUrl = model.ImageUrl;
             entity.Price = model.Price;
-            
-            _productService.Update(entity);
 
+            _productService.Update(entity);
 
             return RedirectToAction("ProductList");
         }
