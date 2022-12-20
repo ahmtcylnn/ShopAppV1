@@ -48,7 +48,7 @@ namespace ShopApp.WebUI.Controllers
             {
                 return NotFound();
             }
-            var entity = _productService.GetById((int)id);
+            var entity = _productService.GetByIdWithCategories((int)id);
             if (entity == null)
             {
                 return NotFound();
@@ -60,14 +60,16 @@ namespace ShopApp.WebUI.Controllers
                 Price = entity.Price,
                 Description = entity.Description,
                 ImageUrl = entity.ImageUrl,
+                SelectedCategories=entity.ProductCategories.Select(i=>i.Category).ToList(),
 
             };
+            ViewBag.Categories=_categoryService.GetAll();
             return View(model);
         }
         [HttpPost]
         public IActionResult EditProduct(ProductModel model)
         {
-            var entity = _productService.GetById((model.ProductId));
+            var entity = _productService.GetByIdWithCategories((model.ProductId));
             if (entity == null)
             {
                 return NotFound();
@@ -166,7 +168,7 @@ namespace ShopApp.WebUI.Controllers
         public IActionResult DeleteFromCategory(int categoryId, int productId)
         {
             _categoryService.DeleteFromCategory(categoryId, productId);
-            return RedirectToAction("/admin/editcategory/" +categoryId);
+            return Redirect("/admin/editcategory/" +categoryId);
         }
     }
 }

@@ -36,6 +36,11 @@ namespace ShopApp.Business.Concrete
             return _productDal.GetById(id);
         }
 
+        public Product GetByIdWithCategories(int productId)
+        {
+            return _productDal.GetByIdWithCategories(productId);
+        }
+
         public int GetCountByCategory(string category)
         {
             return _productDal.GetCountByCategory(category);
