@@ -2,6 +2,7 @@
 using ShopApp.Business.Abstract;
 using ShopApp.Entities;
 using ShopApp.WebUI.Models;
+using System.Linq;
 
 namespace ShopApp.WebUI.Controllers
 {
@@ -125,12 +126,12 @@ namespace ShopApp.WebUI.Controllers
         [HttpGet]
         public IActionResult EditCategory(int id)
         {
-            var entity=_categoryService.GetById(id);
+            var entity=_categoryService.GetByIdWithProducts(id);
             return View(new CategoryModel()
             {
                 CategoryId=id,
                 CategoryName=entity.CategoryName,  
-                
+                Products=entity.ProductCategories.Select(p=>p.Product).ToList()
             });
 
         }

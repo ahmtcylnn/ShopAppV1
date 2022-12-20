@@ -1,4 +1,5 @@
-﻿using ShopApp.DataAccess.Abstract;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopApp.DataAccess.Abstract;
 using ShopApp.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,16 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreCategoryDal : EfCoreGenericRepository<Category, ShopContext>, ICategoryDal
     {
-
-
+        public Category GetByIdWithProducts(int id)
+        {
+            using (var context= new ShopContext())
+            {
+                return context.Categories
+                    .Where(i => i.CategoryId == id)
+                    .Include(i => i.ProductCategories)
+                    .ThenInclude(i => i.Product)
+                    .FirstOrDefault();
+            }
+        }
     }
 }
