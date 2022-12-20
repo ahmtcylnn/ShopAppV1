@@ -162,5 +162,11 @@ namespace ShopApp.WebUI.Controllers
             return RedirectToAction("CategoryList");
 
         }
+        [HttpPost]
+        public IActionResult DeleteFromCategory(int categoryId, int productId)
+        {
+            _categoryService.DeleteFromCategory(categoryId, productId);
+            return RedirectToAction("/admin/editcategory/" +categoryId);
+        }
     }
 }
