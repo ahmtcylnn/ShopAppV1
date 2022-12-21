@@ -62,5 +62,31 @@ namespace ShopApp.DataAccess.Concrete.EfCore
                 return products.Skip((page-1)*pageSize).Take(pageSize).ToList();
             }
         }
+
+        public void Update(Product entity, int[] categoryIds)
+        {
+            using (var context = new ShopContext())
+            {
+                var product = context.Products
+                                      .Include(i => i.ProductCategories)
+                                      .FirstOrDefault(i => i.ProductId == entity.ProductId);
+
+                if (product != null)
+                {
+                    product.Name=entity.Name;
+                    product.Description=entity.Description;
+                    product.ImageUrl=entity.ImageUrl;
+                    product.Price=entity.Price;
+
+
+                    product.ProductCategories = categoryIds.Select(catid => new ProductCategory()
+                    {
+                        CategoryId = catid,
+                        ProductId= entity.ProductId,
+                    }).ToList() ;
+                    context.SaveChanges();  
+                }
+            }
+        }
     }
 }

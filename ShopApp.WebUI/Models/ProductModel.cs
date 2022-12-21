@@ -11,7 +11,7 @@ namespace ShopApp.WebUI.Models
         public string Description { get; set; }
         public decimal Price { get; set; }
         public List<Category> SelectedCategories { get; set; }
-        public List<ProductCategory> ProductCategories { get; set; }
+        
 
     }
 }
