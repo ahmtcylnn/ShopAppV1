@@ -85,7 +85,7 @@ namespace ShopApp.WebUI.Controllers
             entity.Name = model.Name;
             entity.Description = model.Description;
             entity.ImageUrl = model.ImageUrl;
-            entity.Price =(decimal)model.Price;
+            entity.Price = model.Price;
 
             _productService.Update(entity,categoryIds);
 
