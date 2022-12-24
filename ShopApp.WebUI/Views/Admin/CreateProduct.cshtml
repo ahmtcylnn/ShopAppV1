@@ -3,11 +3,23 @@
     ViewData["Title"] = "CreateProduct";
 }
 
+@section Scripts{
+    <script src="/modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/modules/jquery-validation-unobtrusive/jquery.validate.min.js"></script>
+
+}
+
 <h1>CreateProduct</h1>
 <hr/>
 
 <div class="row">  
     <div class="col-md-8">
+        @if (ViewBag.ErrorMessage!=null)
+        {
+            <div class="text-danger">@ViewBag.ErrorMessage</div>
+        }
+        
+
         <form asp-controller="Admin" asp-action="CreateProduct" method="post">
             <div asp-validation-summary="All" class="text-danger" ></div>
             <div class="form-group row">

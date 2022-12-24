@@ -16,9 +16,17 @@ namespace ShopApp.Business.Concrete
         {
             _productDal = productDal;
         }
-        public void Create(Product entity)
+
+        public bool Create(Product entity)
         {
-            _productDal.Create(entity);
+            if (Validate(entity))
+            {
+                _productDal.Create(entity);
+                return true;
+
+            }
+            return false;
+            
         }
 
         public void Delete(Product entity)
@@ -65,5 +73,21 @@ namespace ShopApp.Business.Concrete
         {
             _productDal.Update(entity, categoryIds);
         }
+
+        public string ErrorMessage { get; set; }
+
+        public bool Validate(Product entity)
+        {
+            var isValid = true;
+
+            if (string.IsNullOrEmpty(entity.Name))
+            {
+                ErrorMessage += "Ürün İsmi Girmelisiniz ";
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        
     }
 }
