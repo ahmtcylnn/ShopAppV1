@@ -36,6 +36,42 @@ namespace ShopApp.WebUI
                 .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                // PASSWORD
+
+                options.Password.RequireDigit=true; // Sifre icerisinde sayýsal deðer ister.
+                options.Password.RequireLowercase=true; // Sifre icerisinde kücük karakter ister.
+                options.Password.RequiredLength = 6; // Sifre uzunluðunun min deðerini belirleme.
+                options.Password.RequireNonAlphanumeric=true; // Alfa numerik deðer isteyip istememe.
+                options.Password.RequireUppercase=true; // Sifre icerisinde buyuk karakter ister.
+
+                options.Lockout.MaxFailedAccessAttempts = 5; // Kullanýcý üst üste kac yanlýs sifre girerse blocklanýr.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Bloklanma süresi
+                options.Lockout.AllowedForNewUsers = true; // Lockout iþlemi yeni kullanýcýda geçerli olucak.
+
+                options.User.RequireUniqueEmail = true; // Önceden mail adresiyle oluþturulmuþ hesap olmasýný önler.
+
+                options.SignIn.RequireConfirmedEmail = true; // Email doðrulamasý yapmasý gerekir.
+                options.SignIn.RequireConfirmedPhoneNumber = false; // Telefon Doðrulamasý.
+
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/account/login";
+                options.LogoutPath = "/account/logout";
+                options.AccessDeniedPath = "/account/accessdenied";
+                options.ExpireTimeSpan=TimeSpan.FromMinutes(60); // Cookie Süre verme
+                options.SlidingExpiration = true; // Tekrar Login islemi isteme
+                options.Cookie = new CookieBuilder()
+                {
+                    HttpOnly = true, //Scriptler cookielere ulaþamaz
+                    Name =".ShopApp.Security.Cookie"
+                };
+            });
+
+
             services.AddScoped<IProductDal, EfProductDal>();
             services.AddScoped<ICategoryDal, EfCoreCategoryDal>();
             services.AddScoped<IProductService, ProductManager>();
