@@ -26,7 +26,6 @@ namespace ShopApp.WebUI.Controllers
             return View(new RegisterModel());
         }
         [HttpPost]
-        
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (!ModelState.IsValid)
@@ -124,6 +123,42 @@ namespace ShopApp.WebUI.Controllers
             }
             TempData["message"] = "Hesabınız Onaylanmadı !";
             return View();
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async  Task<IActionResult> ForgotPassword(string Email)
+        {
+            if (string.IsNullOrEmpty(Email))
+            {
+                return View();
+
+            }
+            var user= await _userManager.FindByEmailAsync(Email);
+            if (user==null)
+            {
+                return View();
+            }
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // generate token
+            
+            var callbackUrl = Url.Action("ResetPassword", "Account", new
+            {
+                userId = user.Id,
+                token = code
+            });
+            // send email
+            await _emailSender.SendEmailAsync(Email, "Reset Password", $"Parolanızı Yenilemek İçin Linke <a href='http://localhost:44311{callbackUrl}'>Tıklayınız</a>");
+            return RedirectToAction("Login", "Account");
+
+
+
+            
         }
 
     }
