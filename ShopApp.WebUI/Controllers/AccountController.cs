@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace ShopApp.WebUI.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class AccountController : Controller
     {
+
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
@@ -21,6 +23,7 @@ namespace ShopApp.WebUI.Controllers
             return View(new RegisterModel());
         }
         [HttpPost]
+        
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (!ModelState.IsValid)

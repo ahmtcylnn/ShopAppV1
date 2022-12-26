@@ -67,7 +67,8 @@ namespace ShopApp.WebUI
                 options.Cookie = new CookieBuilder()
                 {
                     HttpOnly = true, //Scriptler cookielere ulaþamaz
-                    Name =".ShopApp.Security.Cookie"
+                    Name =".ShopApp.Security.Cookie",
+                    SameSite= SameSiteMode.Strict
                 };
             });
 
