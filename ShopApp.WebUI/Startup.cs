@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+//using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +12,11 @@ using ShopApp.Business.Abstract;
 using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.DataAccess.Concrete.EfCore;
+using ShopApp.WebUI.EmailServices;
 using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Middlewares;
 using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,7 +56,7 @@ namespace ShopApp.WebUI
 
                 options.User.RequireUniqueEmail = true; // Önceden mail adresiyle oluþturulmuþ hesap olmasýný önler.
 
-                options.SignIn.RequireConfirmedEmail = false; // Email doðrulamasý yapmasý gerekir.
+                options.SignIn.RequireConfirmedEmail = true; // Email doðrulamasý yapmasý gerekir.
                 options.SignIn.RequireConfirmedPhoneNumber = false; // Telefon Doðrulamasý.
 
             });
@@ -77,6 +81,9 @@ namespace ShopApp.WebUI
             services.AddScoped<ICategoryDal, EfCoreCategoryDal>();
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<ICategoryService, CategoryManager>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
