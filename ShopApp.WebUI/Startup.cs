@@ -16,6 +16,8 @@ using ShopApp.WebUI.EmailServices;
 using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Middlewares;
 using System;
+using System.Net;
+using System.Net.Mail;
 
 using System.Collections.Generic;
 using System.Linq;

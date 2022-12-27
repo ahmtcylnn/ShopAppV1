@@ -13,10 +13,10 @@ namespace ShopApp.WebUI.Models
         [Required]
         public string ImageUrl { get; set; }
         [Required]
-        [StringLength(10000, MinimumLength = 15, ErrorMessage = "Ürün Açıklaması 15-100 karakter uzunluğunda olmalıdır.")]
+        [StringLength(100000, MinimumLength = 15, ErrorMessage = "Ürün Açıklaması 15-100 karakter uzunluğunda olmalıdır.")]
         public string Description { get; set; }
         [Required (ErrorMessage ="Fiyat Belirtiniz.")]
-        [Range(1,10000)]
+        [Range(1,100000)]
         public decimal? Price { get; set; }
         public List<Category> SelectedCategories { get; set; }
         
