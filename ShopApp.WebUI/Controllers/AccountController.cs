@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using ShopApp.WebUI.Extentions;
 using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Models;
 using System.Threading.Tasks;
@@ -52,6 +53,14 @@ namespace ShopApp.WebUI.Controllers
                 });
                 // send email
                 await _emailSender.SendEmailAsync(model.Email, "Hesabınızı Onaylayınız",$"Lütfen Email Hesabınızı Onaylamak İçin Linke <a href='http://localhost:44311{callbackUrl}'>Tıklayınız</a>");
+
+                TempData.Put("message", new ResultMessage()
+                {
+                    Title ="Hesap Onayı",
+                    Message ="Eposta adresinize gelen link ile hesabınızı onaylayınız.",
+                    Css="warning"
+                });
+
                 return RedirectToAction("Login", "Account");
             }
             ModelState.AddModelError("", "Bilinmeyen Hata Oluştu Lütfen Tekrar Deneyiniz");
@@ -99,6 +108,12 @@ namespace ShopApp.WebUI.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            TempData.Put("message", new ResultMessage()
+            {
+                Title = "Oturum Kapatıldı.",
+                Message = "Hesabınız Güvenli Bir Şekilde Sonlandırıldı.",
+                Css = "warning"
+            });
             return Redirect("~/");
         }
 
@@ -106,8 +121,13 @@ namespace ShopApp.WebUI.Controllers
         {
             if (userId==null || token==null)
             {
-                TempData["Message"] = "Geçersiz Token.";
-                return View();
+                TempData.Put("message", new ResultMessage()
+                {
+                    Title = "Hesap Onayı",
+                    Message = "Hesap Onayı İçin Bilgileriniz Yanlış !",
+                    Css = "danger"
+                });
+                return RedirectToAction("~/");
             }
             var user=await _userManager.FindByIdAsync(userId);
 
@@ -116,12 +136,22 @@ namespace ShopApp.WebUI.Controllers
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
-                    TempData["message"] = "Hesabınız Onaylandı.";
-                    return View();
+                    TempData.Put("message", new ResultMessage()
+                    {
+                        Title = "Hesap Onayı",
+                        Message = "Hesabınız Başarıyla Onaylanmıştır.",
+                        Css = "success"
+                    });
+                    return  RedirectToAction("Login");
                 }
 
             }
-            TempData["message"] = "Hesabınız Onaylanmadı !";
+            TempData.Put("message", new ResultMessage()
+            {
+                Title = "Hesap Onayı",
+                Message = "Hesabınız Onaylanamadı.",
+                Css = "danger"
+            });
             return View();
         }
 
@@ -134,12 +164,24 @@ namespace ShopApp.WebUI.Controllers
         {
             if (string.IsNullOrEmpty(Email))
             {
+                TempData.Put("message", new ResultMessage()
+                {
+                    Title = "Forgot Password",
+                    Message = "Bilgileriniz Hatalı",
+                    Css = "danger"
+                });
                 return View();
 
             }
             var user= await _userManager.FindByEmailAsync(Email);
             if (user==null)
             {
+                TempData.Put("message", new ResultMessage()
+                {
+                    Title = "Hesap Onayı",
+                    Message = "Eposta Adresi ile Bir Kullanıcı Bulunamadı.",
+                    Css = "danger"
+                });
                 return View();
             }
 
@@ -153,6 +195,12 @@ namespace ShopApp.WebUI.Controllers
             });
             // send email
             await _emailSender.SendEmailAsync(Email, "Reset Password", $"Parolanızı Yenilemek İçin Linke <a href='http://localhost:44311{callbackUrl}'>Tıklayınız</a>");
+            TempData.Put("message", new ResultMessage()
+            {
+                Title = "Forgot Password",
+                Message = "Şifrenizi Yenilemek İçin Hesabınıza Mail Gönderildi ",
+                Css = "warning"
+            });
             return RedirectToAction("Login", "Account");
         }
 
