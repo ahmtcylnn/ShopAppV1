@@ -12,9 +12,10 @@ namespace ShopApp.WebUI.Controllers
     public class AccountController : Controller
     {
 
-        private UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
         private SignInManager<ApplicationUser> _signInManager;
-        private IEmailSender _emailSender;
+        
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;

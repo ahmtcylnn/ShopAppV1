@@ -84,7 +84,9 @@ namespace ShopApp.WebUI
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<ICategoryService, CategoryManager>();
 
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<UserManager<ApplicationUser>>();
+            
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }

@@ -1,37 +1,49 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace ShopApp.WebUI.EmailServices
 {
     public class EmailSender : IEmailSender
     {
-        private const string sendGridKey = "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";
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
-        {
+        private readonly IConfiguration _configuration;
 
-            return Execute(sendGridKey, subject, htmlMessage, email);
+        public EmailSender(IConfiguration configuration)
+        {
+            _configuration = configuration;
         }
 
-        private Task Execute(string sendGridKey, string subject, string message, string email)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
-            var client = new SendGridClient(sendGridKey);
-
-            var msg = new SendGridMessage()
+            using (var client = new SmtpClient())
             {
-                From = new EmailAddress("info@shopapp.com", "Shop App"),
-                Subject = subject,
-                PlainTextContent = message,
-                HtmlContent = message,
+                var credential = new NetworkCredential
+                {
+                    UserName = _configuration["Email:Username"],
+                    Password = _configuration["Email:Password"]
+                };
 
-            };
-            msg.AddTo(new EmailAddress(email));
-            return client.SendEmailAsync(msg);
+                client.Credentials = credential;
+                client.Host = _configuration["Email:Host"];
+                client.Port = int.Parse(_configuration["Email:Port"]);
+                client.EnableSsl = bool.Parse(_configuration["Email:EnableSsl"]);
 
+                using (var emailMessage = new MailMessage())
+                {
+                    emailMessage.To.Add(new MailAddress(email));
+                    emailMessage.From = new MailAddress(_configuration["Email:Username"]);
+                    emailMessage.Subject = subject;
+                    emailMessage.Body = message;
+                    emailMessage.IsBodyHtml = true;
+
+                   await client.SendMailAsync(emailMessage);
+                }
+
+            }
         }
-        
     }
 
 }
