@@ -13,15 +13,15 @@ namespace ShopApp.WebUI.Controllers
     public class AccountController : Controller
     {
 
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
+        private IEmailSender _emailSender;
         private ICartService _cartService;
 
-        
+
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, ICartService cartService)
         {
-            _cartService= cartService;
+            _cartService = cartService;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -46,25 +46,25 @@ namespace ShopApp.WebUI.Controllers
                 FullName = model.FullName,
             };
 
-            var result= await _userManager.CreateAsync(user,model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);
+
             if (result.Succeeded)
             {
                 // generate token
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("Login", "Account", new
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new
                 {
-
-                    userId=user.Id,
-                    token= code
+                    userId = user.Id,
+                    token = code
                 });
                 // send email
-                await _emailSender.SendEmailAsync(model.Email, "Hesabınızı Onaylayınız.", $"Lütfen email hesabınızı onaylamak için linke <a href='http://localhost:44311{callbackUrl}'>tıklayınız.</a>");
+                await _emailSender.SendEmailAsync(model.Email, "Hesabınızı Onaylayınız.", $"Lütfen email hesabınızı onaylamak için linke <a href='https://localhost:44311{callbackUrl}'>tıklayınız.</a>");
 
                 TempData.Put("message", new ResultMessage()
                 {
-                    Title ="Hesap Onayı",
-                    Message ="Eposta adresinize gelen link ile hesabınızı onaylayınız.",
-                    Css="warning"
+                    Title = "Hesap Onayı",
+                    Message = "Eposta adresinize gelen link ile hesabınızı onaylayınız.",
+                    Css = "warning"
                 });
 
                 return RedirectToAction("Login", "Account");
@@ -82,34 +82,35 @@ namespace ShopApp.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            
+
 
             if (!ModelState.IsValid)
             {
                 return View(model);
 
             }
-            var user= await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 ModelState.AddModelError("", "Bu email ile daha önce hesap oluşturulmamış.");
                 return View(model);
             }
 
-            if(!await _userManager.IsEmailConfirmedAsync(user))
+            if (!await _userManager.IsEmailConfirmedAsync(user))
             {
                 ModelState.AddModelError("", "Lütfen Hesabınızı Email ile Doğrulayınız");
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password,true,false);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
+            
             if (result.Succeeded)
             {
-                return Redirect(model.ReturnUrl ?? "~/"); 
+                return Redirect(model.ReturnUrl ?? "~/");
             }
             ModelState.AddModelError("", "Email veya parola yanlış.");
             return View(model);
-            
+
         }
         public async Task<IActionResult> Logout()
         {
@@ -123,7 +124,7 @@ namespace ShopApp.WebUI.Controllers
             return Redirect("~/");
         }
 
-        public async Task<IActionResult> ConfirmEmail(string userId,string token)
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
 
             if (userId == null || token == null)
@@ -154,7 +155,7 @@ namespace ShopApp.WebUI.Controllers
                         Css = "success"
                     });
 
-                    return View("Login");
+                    return RedirectToAction("Login");
                 }
             }
 
@@ -172,7 +173,7 @@ namespace ShopApp.WebUI.Controllers
             return View();
         }
         [HttpPost]
-        public async  Task<IActionResult> ForgotPassword(string Email)
+        public async Task<IActionResult> ForgotPassword(string Email)
         {
             if (string.IsNullOrEmpty(Email))
             {
@@ -185,22 +186,23 @@ namespace ShopApp.WebUI.Controllers
                 return View();
 
             }
-            var user= await _userManager.FindByEmailAsync(Email);
-            if (user==null)
+            var user = await _userManager.FindByEmailAsync(Email);
+            if (user == null)
             {
                 TempData.Put("message", new ResultMessage()
                 {
-                    Title = "Hesap Onayı",
-                    Message = "Eposta Adresi ile Bir Kullanıcı Bulunamadı.",
+                    Title = "Forgot Password",
+                    Message = "Eposta adresi ile bir kullanıcı bulunamadı",
                     Css = "danger"
                 });
+
                 return View();
             }
 
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             // generate token
-            
+
             var callbackUrl = Url.Action("ResetPassword", "Account", new
             {
                 token = code
@@ -216,9 +218,9 @@ namespace ShopApp.WebUI.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        public IActionResult ResetPassword(string userId,string token)
+        public IActionResult ResetPassword(string token)
         {
-            if (token==null)
+            if (token == null)
             {
                 return RedirectToAction("Home", "Index");
             }
@@ -228,12 +230,12 @@ namespace ShopApp.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var user=await _userManager.FindByEmailAsync(model.Email);
-            if (user==null)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
             {
                 return RedirectToAction("Home", "Index");
             }
@@ -244,7 +246,7 @@ namespace ShopApp.WebUI.Controllers
             }
             return View(model);
 
-           
+
         }
         public IActionResult Accessdenied()
         {
