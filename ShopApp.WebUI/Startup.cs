@@ -81,8 +81,11 @@ namespace ShopApp.WebUI
 
             services.AddScoped<IProductDal, EfProductDal>();
             services.AddScoped<ICategoryDal, EfCoreCategoryDal>();
+            services.AddScoped<ICartDal, EfCoreCartDal>();
+            
             services.AddScoped<IProductService, ProductManager>();
             services.AddScoped<ICategoryService, CategoryManager>();
+            services.AddScoped<ICartService,CartManager>();
 
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<UserManager<ApplicationUser>>();

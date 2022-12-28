@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using ShopApp.Business.Abstract;
 using ShopApp.WebUI.Extentions;
 using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Models;
@@ -15,9 +16,12 @@ namespace ShopApp.WebUI.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private SignInManager<ApplicationUser> _signInManager;
+        private ICartService _cartService;
+
         
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, ICartService cartService)
         {
+            _cartService= cartService;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -140,6 +144,9 @@ namespace ShopApp.WebUI.Controllers
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
+                    //create cart object
+
+                    _cartService.InitializeCart(user.Id);
                     TempData.Put("message", new ResultMessage()
                     {
                         Title = "Hesap Onayı",
@@ -147,7 +154,7 @@ namespace ShopApp.WebUI.Controllers
                         Css = "success"
                     });
 
-                    return View("");
+                    return View("Login");
                 }
             }
 
