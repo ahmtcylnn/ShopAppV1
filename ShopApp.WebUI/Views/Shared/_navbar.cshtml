@@ -21,29 +21,33 @@
             <li class="nav-item">
                 <a class="nav-link" asp-controller="Shop" asp-action="List">Products</a>
             </li>
-            @*<li class="nav-item">
-                <a class="nav-link" href="#">Cart</a>
-                </li>
-
-                <li class="nav-item">
-                <a class="nav-link" href="#">Orders</a>
-                </li>*@
+           
 
             @if (User.Identity.IsAuthenticated)
             {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Cart</a>
+                    </li>
 
-                <li class="nav-item">
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Orders</a>
+                    </li>
+                @if (User.IsInRole("admin"))
+                {
+                    <li class="nav-item">
                     <a asp-controller="Admin" asp-action="CreateProduct" class="nav-link">Add Product</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-controller="Admin" asp-action="ProductList" class="nav-link">Admin Product</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-controller="Admin" asp-action="CreateCategory" class="nav-link">Add Category</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-controller="Admin" asp-action="CategoryList" class="nav-link">Admin Categories</a>
-                </li>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="ProductList" class="nav-link">Admin Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="CreateCategory" class="nav-link">Add Category</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="CategoryList" class="nav-link">Admin Categories</a>
+                    </li>
+                }
+                
 
             }
         </ul>

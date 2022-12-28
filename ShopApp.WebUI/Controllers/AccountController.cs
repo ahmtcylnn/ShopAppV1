@@ -47,13 +47,14 @@ namespace ShopApp.WebUI.Controllers
             {
                 // generate token
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmail","Account", new
+                var callbackUrl = Url.Action("Login", "Account", new
                 {
+
                     userId=user.Id,
                     token= code
                 });
                 // send email
-                await _emailSender.SendEmailAsync(model.Email, "Hesabınızı Onaylayınız",$"Lütfen Email Hesabınızı Onaylamak İçin Linke <a href='http://localhost:44311{callbackUrl}'>Tıklayınız</a>");
+                await _emailSender.SendEmailAsync(model.Email, "Hesabınızı Onaylayınız.", $"Lütfen email hesabınızı onaylamak için linke <a href='http://localhost:44311{callbackUrl}'>tıklayınız.</a>");
 
                 TempData.Put("message", new ResultMessage()
                 {
@@ -120,19 +121,21 @@ namespace ShopApp.WebUI.Controllers
 
         public async Task<IActionResult> ConfirmEmail(string userId,string token)
         {
-            if (userId==null || token==null)
+
+            if (userId == null || token == null)
             {
                 TempData.Put("message", new ResultMessage()
                 {
                     Title = "Hesap Onayı",
-                    Message = "Hesap Onayı İçin Bilgileriniz Yanlış !",
+                    Message = "Hesap onayı için bilgileriniz yanlış",
                     Css = "danger"
                 });
-                return RedirectToAction("~/");
-            }
-            var user=await _userManager.FindByIdAsync(userId);
 
-            if (user!=null)
+                return Redirect("~/");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
             {
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
@@ -140,17 +143,18 @@ namespace ShopApp.WebUI.Controllers
                     TempData.Put("message", new ResultMessage()
                     {
                         Title = "Hesap Onayı",
-                        Message = "Hesabınız Başarıyla Onaylanmıştır.",
+                        Message = "Hesabınız başarıyla onaylanmıştır.",
                         Css = "success"
                     });
-                    return  RedirectToAction("Login");
-                }
 
+                    return View("");
+                }
             }
+
             TempData.Put("message", new ResultMessage()
             {
                 Title = "Hesap Onayı",
-                Message = "Hesabınız Onaylanamadı.",
+                Message = "Hesabınız onaylanamadı.",
                 Css = "danger"
             });
             return View();
@@ -234,6 +238,10 @@ namespace ShopApp.WebUI.Controllers
             return View(model);
 
            
+        }
+        public IActionResult Accessdenied()
+        {
+            return View();
         }
 
     }
