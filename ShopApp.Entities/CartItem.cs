@@ -16,6 +16,8 @@ namespace ShopApp.Entities
         public Cart Cart { get; set; }
         public int CartId { get; set; }
         
+        
+
         public int Quanitity { get; set; }
     }
 }

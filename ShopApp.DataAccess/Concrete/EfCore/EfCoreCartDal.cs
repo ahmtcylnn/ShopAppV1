@@ -12,9 +12,9 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreCartDal : EfCoreGenericRepository<Cart, ShopContext>, ICartDal
     {
-        public Cart GetCartByUserId(string userId)
+        public Cart GetByUserId(string userId)
         {
-            using (var context = new ShopContext() { })
+            using (var context = new ShopContext() )
             {
                 return context
                                 .Carts
