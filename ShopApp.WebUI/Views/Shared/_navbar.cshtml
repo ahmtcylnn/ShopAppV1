@@ -1,76 +1,68 @@
-﻿<nav class="navbar navbar-expand-lg navbar-light bg-light mb-5" style="background: #cdd1d8;
-  background: linear-gradient(to right, #cdd1d8, #B8B9BB);
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
-  position: sticky;
-  top: 0;
-  z-index: 999;">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" asp-controller="Home" asp-action="Index">ShopApp</a>
+﻿<link rel="stylesheet" type="text/css" href="~/css/style.css" />
 
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo03" style="">
-        <ul class="navbar-nav mr-auto ml-auto">
-            <li class="nav-item active">
-                <a class="nav-link" asp-controller="Home" asp-action="Index">AnaSayfa <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-controller="Shop" asp-action="List">Products</a>
-            </li>
-           
 
+
+<nav class="navbar">
+    <div class="navbar__toggle" id="mobile-menu">
+        <span class="bar"></span> <span class="bar"></span>
+        <span class="bar"></span>
+    </div>
+    <a class="navbar__links" asp-controller="Home" asp-action="Index">ShopApp</a>
+
+    <div class="navbar__container">
+        <ul class="navbar__menu">
+            <li class="navbar__item">
+                <a class="navbar__links" asp-controller="Home" asp-action="Index">AnaSayfa <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="navbar__item">
+                <a class="navbar__links" asp-controller="Shop" asp-action="List">Products</a>
+            </li>
             @if (User.Identity.IsAuthenticated)
             {
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Cart</a>
-                    </li>
+                <li class="navbar__item">
+                    <a class="navbar__links" href="#">Cart</a>
+                </li>
 
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Orders</a>
-                    </li>
+                <li class="navbar__item">
+                    <a class="navbar__links" href="#">Orders</a>
+                </li>
                 @if (User.IsInRole("admin"))
                 {
-                    <li class="nav-item">
-                    <a asp-controller="Admin" asp-action="CreateProduct" class="nav-link">Add Product</a>
+                    <li class="navbar__item">
+                        <a asp-controller="Admin" asp-action="CreateProduct" class="navbar__links">Add Product</a>
                     </li>
-                    <li class="nav-item">
-                        <a asp-controller="Admin" asp-action="ProductList" class="nav-link">Admin Product</a>
+                    <li class="navbar__item">
+                        <a asp-controller="Admin" asp-action="ProductList" class="navbar__links">Admin Product</a>
                     </li>
-                    <li class="nav-item">
-                        <a asp-controller="Admin" asp-action="CreateCategory" class="nav-link">Add Category</a>
+                    <li class="navbar__item">
+                        <a asp-controller="Admin" asp-action="CreateCategory" class="navbar__links">Add Category</a>
                     </li>
-                    <li class="nav-item">
-                        <a asp-controller="Admin" asp-action="CategoryList" class="nav-link">Admin Categories</a>
+                    <li class="navbar__item">
+                        <a asp-controller="Admin" asp-action="CategoryList" class="navbar__links">Admin Categories</a>
                     </li>
                 }
-                
-
             }
         </ul>
 
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto flex-row">
             @if (User.Identity.IsAuthenticated)
             {
-                <li class="nav-item">
-                    <a asp-controller="Account" asp-action="Manage" class="nav-link">
+                <li class="navbar__btn">
+                    <a asp-controller="Account" asp-action="Manage" class="navbar__links">
                         @User.Identity.Name
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a asp-controller="Account" asp-action="Logout" class="nav-link">Logout</a>
+                <li class="navbar__btn">
+                    <a class="button" asp-controller="Account" asp-action="Logout" style="border-radius:75px;">Logout</a>
                 </li>
             }
             else
             {
-                <li class="nav-item">
-                    <a asp-controller="Account" asp-action="Login" class="nav-link" class="nav-link">Login</a>
+                <li class="navbar__btn">
+                    <a asp-controller="Account" asp-action="Login" class="button" style="display:inline;" style="border-radius:75px;">Login</a>
                 </li>
-                <li class="nav-item">
-                    <a asp-controller="Account" asp-action="Register" class="nav-link" class="nav-link">Register</a>
+                <li class="navbar__btn">
+                    <a asp-controller="Account" asp-action="Register" class="button" style="display:inline;" style="border-radius:75px;">Register</a>
                 </li>
 
             }
@@ -81,15 +73,15 @@
         @*<form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 1rem;
-  width: 50%; background: #131313;
-  color: #fff;
-  transition: all 0.3s ease;">
-                Search
+            justify-content: center;
+            align-items: center;
+            padding: 0 1rem;
+            width: 50%; background: #131313;
+            color: #fff;
+            transition: all 0.3s ease;">
+            Search
             </button>
-        </form>*@
+            </form>*@
     </div>
 </nav>
 
