@@ -1,5 +1,6 @@
 ﻿using ShopApp.Business.Abstract;
 using ShopApp.DataAccess.Abstract;
+using ShopApp.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,11 @@ namespace ShopApp.Business.Concrete
         public CartManager(ICartDal cartDal)
         {
             _cartDal=cartDal;
+        }
+
+        public Cart GetCartByUserId(string userId)
+        {
+            return _cartDal.GetCartByUserId(userId);
         }
 
         public void InitializeCart(string userId)
