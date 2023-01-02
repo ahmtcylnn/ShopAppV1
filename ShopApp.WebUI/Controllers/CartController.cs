@@ -109,7 +109,7 @@ namespace ShopApp.WebUI.Controllers
                 if (payment.Status == "success")
                 {
                     SaveOrder(model, payment, userId);
-                    // ClearCart(userId);
+                    ClearCart(cart.Id.ToString());
                     return View("Success");
                 }
             }
@@ -147,16 +147,16 @@ namespace ShopApp.WebUI.Controllers
             _orderService.Create(order);
         }
 
-        private void ClearCart(object userId)
+        private void ClearCart(string cartId)
         {
-            throw new NotImplementedException();
+            _cartService.ClearCart(cartId);
         }
 
         private Payment PaymentProcess(OrderModel model)
         {
             Options options = new Options();
-            options.ApiKey = "Your Api Key";
-            options.SecretKey = "Your Secret Key";
+            options.ApiKey = "Your api key";
+            options.SecretKey = "Secret key";
             options.BaseUrl = "https://sandbox-api.iyzipay.com";
 
             CreatePaymentRequest request = new CreatePaymentRequest();
