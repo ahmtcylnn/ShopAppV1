@@ -29,13 +29,13 @@ namespace ShopApp.Business.Concrete
                     cart.CartItems.Add(new CartItem()
                     {
                         ProductId = productId,
-                        Quanitity = quantity,
+                        Quantity = quantity,
                         CartId = cart.Id,
                     });
                 }
                 else
                 {
-                    cart.CartItems[index].Quanitity += quantity;
+                    cart.CartItems[index].Quantity += quantity;
                 }
                 _cartDal.Update(cart);
             }

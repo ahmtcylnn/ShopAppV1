@@ -18,6 +18,6 @@ namespace ShopApp.Entities
         
         
 
-        public int Quanitity { get; set; }
+        public int Quantity { get; set; }
     }
 }
