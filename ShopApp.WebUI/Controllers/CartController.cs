@@ -155,8 +155,8 @@ namespace ShopApp.WebUI.Controllers
         private Payment PaymentProcess(OrderModel model)
         {
             Options options = new Options();
-            options.ApiKey = "Your api key";
-            options.SecretKey = "Secret key";
+            options.ApiKey = "sandbox-qRrfV2JOSMnfcLYbEyatVFrEVmUppAhZ";
+            options.SecretKey = "sandbox-ux8JlX5zRVP3UOY8auW5ilRDwlLQMtR5";
             options.BaseUrl = "https://sandbox-api.iyzipay.com";
 
             CreatePaymentRequest request = new CreatePaymentRequest();
@@ -236,6 +236,41 @@ namespace ShopApp.WebUI.Controllers
 
             return Payment.Create(request, options);
 
+        }
+        public IActionResult GetOrders()
+        {
+            var orders = _orderService.GetOrders(_userManager.GetUserId(User));
+            var orderListModel = new List<OrderListModel>();
+            OrderListModel orderModel;
+
+            foreach (var order in orders)
+            {
+                orderModel = new OrderListModel();
+                orderModel.OrderId = order.Id;
+                orderModel.OrderNumber = order.OrderNumber;
+                orderModel.OrderDate = order.OrderDate;
+                orderModel.OrderNote = order.OrderNote;
+                orderModel.Phone = order.Phone;
+                orderModel.FirstName = order.FirstName;
+                orderModel.LastName = order.LastName;
+                orderModel.Email = order.Email;
+                orderModel.Address = order.Address;
+                orderModel.City = order.City;
+
+                orderModel.OrderItems = order.OrderItems.Select(i => new OrderItemModel()
+                {
+                    OrderItemId = i.Id,
+                    Name = i.Product.Name,
+                    Price = i.Price,
+                    Quantity = i.Quantity,
+                    ImageUrl = i.Product.ImageUrl
+                }).ToList();
+
+                orderListModel.Add(orderModel);
+
+            }
+
+            return View(orderListModel);
         }
 
 

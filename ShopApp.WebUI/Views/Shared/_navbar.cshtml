@@ -25,7 +25,7 @@
                 </li>
 
                 <li class="navbar__item">
-                    <a class="navbar__links" href="#">Orders</a>
+                    <a class="navbar__links" asp-controller="Cart" asp-action="GetOrders">Orders</a>
                 </li>
                 @if (User.IsInRole("admin"))
                 {
