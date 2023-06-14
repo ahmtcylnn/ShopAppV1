@@ -362,3 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 ShopApp.WebUI/appsettings.json
+ShopApp.WebUI/appsettings.Development.json
+ShopApp.WebUI/package-lock.json
+ShopApp.WebUI/package.json
+
